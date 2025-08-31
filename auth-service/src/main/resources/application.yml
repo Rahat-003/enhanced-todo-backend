@@ -5,3 +5,34 @@ spring:
     active: dev
   config:
     import: "optional:configserver:http://localhost:15001/"
+  security:
+    oauth2:
+      client:
+        client-id: client
+        client-secret: secret
+        access-token-uri: http://localhost:15002/br_authorization/oauth/token
+        user-authorization-uri: http://localhost:15002/br_authorization/oauth/authorize
+      resource:
+        user-info-uri: http://localhost:15002/br_authorization/user/me
+        token-info-uri: http://localhost:15002/br_authorization/oauth/check_token
+
+server:
+  port: 15002
+  servlet:
+    context-path: /br_authorization
+
+security:
+  oauth2:
+    client:
+      client-id: client
+      client-secret: secret
+      access-token-uri: http://localhost:15002/br_authorization/oauth/token
+      user-authorization-uri: http://localhost:15002/br_authorization/oauth/authorize
+    resource:
+      user-info-uri: http://localhost:15002/br_authorization/user/me
+      token-info-uri: http://localhost:15002/br_authorization/oauth/check_token
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG

@@ -29,6 +29,7 @@
         <module>todo-service</module>
         <module>auth-service</module>
         <module>api-gateway</module>
+        <module>domain</module>
     </modules>
 
     <dependencyManagement>
