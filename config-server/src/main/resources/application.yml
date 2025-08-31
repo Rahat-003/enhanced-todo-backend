@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 15001
 
 spring:
   cloud:
@@ -7,4 +7,4 @@ spring:
       server:
         git:
           uri: ${HOME}/enhanced-todo-app-config
-          search-paths: "*server"
+          search-paths: "auth-service,todo-service,api-gateway"
