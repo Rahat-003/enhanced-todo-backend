@@ -1,13 +1,13 @@
-package com.personal.enhancedtodotest;
+package com.personal.todoservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EnhancedTodoTestApplication {
+public class TodoServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EnhancedTodoTestApplication.class, args);
+        SpringApplication.run(TodoServiceApplication.class, args);
     }
 
 }
