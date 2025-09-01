@@ -7,4 +7,5 @@ spring:
       server:
         git:
           uri: ${HOME}/enhanced-todo-app-config
-          search-paths: "auth-service,todo-service,api-gateway"
+          search-paths: "*server"
+
