@@ -12,9 +12,16 @@
     <name>Enhanced Todo App</name>
     <description>Multi-module Todo application platform</description>
 
+    <!-- Spring Boot Parent -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.2</version> <!-- ensures Spring Boot 3.5.5 is used -->
+        <relativePath/> <!-- do not rely on filesystem relative path -->
+    </parent>
+
     <properties>
         <java.version>17</java.version>
-        <spring.boot.version>3.5.5</spring.boot.version>
         <spring.cloud.version>2023.0.6</spring.cloud.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -27,19 +34,23 @@
         <module>service</module>
         <module>domain</module>
         <module>projection</module>
-        <!--        <module>domain</module>-->
-<!--        <module>projection</module>-->
-<!--        <module>enumeration</module>-->
+        <module>api_gateway</module>
+        <module>auth_service</module>
+        <module>config-server</module>
+        <module>todo-service</module>
+        <!-- <module>enumeration</module> -->
     </modules>
 
-
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.36</version>
+            <scope>provided</scope>
         </dependency>
+
+        <!-- Jasypt for encryption -->
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot-starter</artifactId>
@@ -49,15 +60,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Spring Boot BOM -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <!-- Spring Cloud BOM -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -68,8 +70,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-
 
     <build>
         <pluginManagement>
