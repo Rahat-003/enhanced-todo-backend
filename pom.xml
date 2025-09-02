@@ -34,7 +34,8 @@
         <module>service</module>
         <module>domain</module>
         <module>projection</module>
-<!--        <module>api_gateway</module>-->
+        <module>enumeration</module>
+        <!--        <module>api_gateway</module>-->
 <!--        <module>auth_service</module>-->
 <!--        <module>config-server</module>-->
 <!--        <module>todo-service</module>-->
