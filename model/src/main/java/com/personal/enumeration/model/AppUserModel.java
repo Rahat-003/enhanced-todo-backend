@@ -1,4 +1,4 @@
-package com.personal.model;
+package com.personal.enumeration.model;
 
 
 import lombok.Getter;

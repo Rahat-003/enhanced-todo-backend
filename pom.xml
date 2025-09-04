@@ -30,11 +30,11 @@
     <!-- Only modules without main @SpringBootApplication -->
     <modules>
         <module>model</module>
+        <module>enumeration</module>
         <module>repository</module>
         <module>service</module>
         <module>domain</module>
         <module>projection</module>
-        <module>enumeration</module>
         <!--        <module>api_gateway</module>-->
 <!--        <module>auth_service</module>-->
 <!--        <module>config-server</module>-->

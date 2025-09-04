@@ -2,7 +2,7 @@ package com.personal.service.impl;
 
 
 import com.personal.domain.AppUser;
-import com.personal.model.AppUserModel;
+import com.personal.enumeration.model.AppUserModel;
 import com.personal.repository.AppUserRepository;
 import com.personal.service.UserService;
 import lombok.RequiredArgsConstructor;
