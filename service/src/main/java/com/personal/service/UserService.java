@@ -1,10 +1,10 @@
 package com.personal.service;
 
-import com.personal.domain.User;
-import com.personal.model.UserModel;
+import com.personal.domain.AppUser;
+import com.personal.model.AppUserModel;
 
 public interface UserService {
-    String addUser(UserModel userModel);
+    String addUser(AppUserModel appUserModel);
 
-    User getUser(String username);
+    AppUser getUser(String username);
 }

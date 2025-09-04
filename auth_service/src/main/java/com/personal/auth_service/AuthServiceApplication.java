@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = {"com.personal.repository"})
 @ComponentScan(basePackages = {
         "com.personal.auth_service",
+//        "com.personal.repository",
         "com.personal.service"
 })
 @SpringBootApplication

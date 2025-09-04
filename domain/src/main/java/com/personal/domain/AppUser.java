@@ -1,28 +1,28 @@
 package com.personal.domain;
 
-
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.Set;
+import java.io.Serializable;
 
 @Entity
-@Table(name = "users")
-@Data
+@Table(name = "app_user")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class AppUser implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String username;
+    private String userName;
 
     @Column(nullable = false)
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> roles;
+    @Column(nullable = false)
+    private String email;
 }

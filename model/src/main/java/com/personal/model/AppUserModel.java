@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserModel {
+public class AppUserModel {
     private String username;
     private String password;
 }

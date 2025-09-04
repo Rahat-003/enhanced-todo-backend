@@ -7,3 +7,8 @@ spring:
     import:
       - "optional:configserver:http://localhost:15001/"
       - "optional:classpath:oAuth2_google-secret.yml"
+
+jwt:
+  secret: E4k9N7p3S6v9Y2z5C8f1A4d7G0j3K6m9N2p5R8t0V3x8Z1B3g7H0i6L9k2M5n8P
+  expiration: 86400000 # 24 hours
+  refreshTokenExpiration: 604800000 # 7 days

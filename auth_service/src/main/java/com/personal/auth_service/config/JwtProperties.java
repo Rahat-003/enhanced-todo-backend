@@ -1,15 +1,14 @@
 package com.personal.auth_service.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "jwt")
-@Getter
-@Setter
+@Data
 public class JwtProperties {
-    private String secret;
-    private long expiration; // in milliseconds
+    private String secret = "defaultSecretKey";
+    private long expiration = 86400000; // 1 day
+    private long refreshTokenExpiration = 604800000; // 7 days
 }

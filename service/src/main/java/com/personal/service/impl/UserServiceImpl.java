@@ -1,9 +1,9 @@
 package com.personal.service.impl;
 
 
-import com.personal.domain.User;
-import com.personal.model.UserModel;
-import com.personal.repository.UserRepository;
+import com.personal.domain.AppUser;
+import com.personal.model.AppUserModel;
+import com.personal.repository.AppUserRepository;
 import com.personal.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,27 +13,27 @@ import java.util.NoSuchElementException;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
 
 
     public void testRepository() {
-        System.out.println("User count: " + userRepository.count());
+        System.out.println("User count: " + appUserRepository.count());
     }
     @Override
-    public String addUser(UserModel userModel) {
-        User user = new User();
-        user.setUsername(userModel.getUsername());
-        user.setPassword(userModel.getPassword());
-        userRepository.save(user);
+    public String addUser(AppUserModel appUserModel) {
+        AppUser user = new AppUser();
+        user.setUserName(appUserModel.getUsername());
+        user.setPassword(appUserModel.getPassword());
+        appUserRepository.save(user);
         return "User added successfully";
     }
 
 
 
     @Override
-    public User getUser(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(()->new NoSuchElementException("User not found"));
+    public AppUser getUser(String username) {
+        AppUser user = appUserRepository.findByUserName(username)
+                .orElseThrow(()-> new NoSuchElementException("User not found"));
         return user;
     }
 }
