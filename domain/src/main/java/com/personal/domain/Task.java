@@ -32,6 +32,9 @@ public class Task {
     @Column(name = "added_date", nullable = false)
     private LocalDate addedDate;
 
+    @Column(name = "is_completed", nullable = false)
+    private Boolean isCompleted;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "app_user_id", nullable = false)
     private AppUser appUser;
