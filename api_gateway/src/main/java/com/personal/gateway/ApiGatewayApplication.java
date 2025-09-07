@@ -1,4 +1,4 @@
-package com.personal.todo_service;
+package com.personal.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
