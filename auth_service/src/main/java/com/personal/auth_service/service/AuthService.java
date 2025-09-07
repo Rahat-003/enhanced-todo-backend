@@ -3,77 +3,85 @@ package com.personal.auth_service.service;
 import com.personal.auth_service.dto.AuthRequest;
 import com.personal.auth_service.dto.AuthResponse;
 import com.personal.auth_service.dto.RegisterRequest;
-import com.personal.auth_service.exception.InvalidCredentialsException;
-import com.personal.auth_service.exception.UserAlreadyExistsException;
-import com.personal.auth_service.exception.UserNotFoundException;
 import com.personal.auth_service.util.JwtUtil;
 import com.personal.domain.AppUser;
+import com.personal.domain.RefreshToken;
+import com.personal.enumeration.Role;
 import com.personal.repository.AppUserRepository;
+import com.personal.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AuthService {
 
-    private final AppUserRepository appUserRepository;
+    private final AppUserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    public AuthResponse register(RegisterRequest request) {
-        if (appUserRepository.findByEmail(request.getEmail()).isPresent()) {
-            log.warn("Email {} already exists", request.getEmail());
-            throw new UserAlreadyExistsException("Email already exists");
-        }
+    public AuthResponse registerUser(RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent())
+            throw new RuntimeException("User already exists");
 
-        AppUser user = new AppUser();
-        user.setUserName(request.getUserName());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        AppUser user = AppUser.builder()
+                .email(request.getEmail())
+                .userName(request.getUserName())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.ROLE_USER)
+                .enabled(true)
+                .locked(false)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+        userRepository.save(user);
 
-        appUserRepository.save(user);
-        log.info("User {} registered successfully", user.getUserName());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+        String accessToken = jwtUtil.generateAccessToken(userDetails);
+        String refreshToken = jwtUtil.generateRefreshToken(request.getEmail());
 
-        return generateAuthResponse(user.getUserName());
-    }
+        saveRefreshToken(user, refreshToken);
 
-    public AuthResponse login(AuthRequest request) {
-        AppUser user = appUserRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> {
-                    log.warn("User not found with email: {}", request.getEmail());
-                    return new UserNotFoundException("User not found");
-                });
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            log.warn("Invalid credentials for user: {}", request.getEmail());
-            throw new InvalidCredentialsException("Invalid credentials");
-        }
-
-        log.info("User {} logged in successfully", user.getUserName());
-        // Generate JWT token
-        return generateAuthResponse(user.getUserName());
-    }
-
-    public AuthResponse refreshToken(String refreshToken) {
-        String username = jwtUtil.extractUsername(refreshToken);
-        AppUser user = appUserRepository.findByUserName(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found "));
-        if (jwtUtil.isTokenValid(refreshToken, new CustomUserDetails(user))) {
-            return generateAuthResponse(username);
-        }
-        throw new InvalidCredentialsException("Invalid refresh token");
-    }
-
-    private AuthResponse generateAuthResponse(String username) {
-        String accessToken = jwtUtil.generateAccessToken(username);
-        String refreshToken = jwtUtil.generateRefreshToken(username);
         return AuthResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
-}
 
+    public AuthResponse login(AuthRequest request) {
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+        if (!passwordEncoder.matches(request.getPassword(), userDetails.getPassword())) {
+            throw new BadCredentialsException("Invalid credentials");
+        }
+
+        final AppUser user = userRepository.findByEmail(request.getEmail()).get();
+
+        String accessToken = jwtUtil.generateAccessToken(userDetails);
+        String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
+
+        saveRefreshToken(user, refreshToken);
+
+        return AuthResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    private void saveRefreshToken(AppUser user, String refreshToken) {
+        RefreshToken rt = RefreshToken.builder()
+                .user(user)
+                .token(refreshToken)
+                .expiresAt(Instant.now().plusSeconds(604800))
+                .revoked(false)
+                .createdAt(Instant.now())
+                .build();
+        refreshTokenRepository.save(rt);
+    }
+}

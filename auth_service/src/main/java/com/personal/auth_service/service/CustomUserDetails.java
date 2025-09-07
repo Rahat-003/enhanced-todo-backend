@@ -3,17 +3,17 @@ package com.personal.auth_service.service;
 
 import com.personal.domain.AppUser;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.ArrayList;
-
+import java.util.Collections;
 
 public record CustomUserDetails(AppUser appUser) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
+        return Collections.singletonList(new SimpleGrantedAuthority(appUser.getRole().name()));
     }
 
     @Override
@@ -23,7 +23,7 @@ public record CustomUserDetails(AppUser appUser) implements UserDetails {
 
     @Override
     public String getUsername() {
-        return appUser.getUserName();
+        return appUser.getEmail();
     }
 
     @Override
@@ -33,9 +33,8 @@ public record CustomUserDetails(AppUser appUser) implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !appUser.isLocked();
     }
-
 
     @Override
     public boolean isCredentialsNonExpired() {
@@ -44,6 +43,6 @@ public record CustomUserDetails(AppUser appUser) implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return appUser.isEnabled();
     }
 }
