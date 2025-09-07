@@ -6,8 +6,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "jwt")
-public class JwtProperties {
-    private Long expiration;
-    private Long refreshTokenExpiration;
+@ConfigurationProperties(prefix = "jwt.keystore")
+public class JwtKeystoreProperties {
+    private String path;
+    private String password;
+    private String keyAlias;
 }

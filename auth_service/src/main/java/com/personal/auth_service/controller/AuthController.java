@@ -21,7 +21,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+        return ResponseEntity.ok(authService.registerUser(request));
     }
 
     @PostMapping("/login")
@@ -29,8 +29,8 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
-        return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));
-    }
+//    @PostMapping("/refresh")
+//    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+//        return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));
+//    }
 }
