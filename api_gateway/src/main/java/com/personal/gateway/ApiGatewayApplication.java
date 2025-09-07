@@ -1,13 +1,13 @@
-package com.personal.api_gateway;
+package com.personal.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TodoServiceApplication {
+public class ApiGatewayApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TodoServiceApplication.class, args);
+        SpringApplication.run(ApiGatewayApplication.class, args);
     }
 
 }
