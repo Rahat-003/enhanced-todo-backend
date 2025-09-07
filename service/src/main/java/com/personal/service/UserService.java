@@ -1,7 +1,7 @@
 package com.personal.service;
 
 import com.personal.domain.AppUser;
-import com.personal.model.AppUserModel;
+import com.personal.enumeration.model.AppUserModel;
 
 public interface UserService {
     String addUser(AppUserModel appUserModel);

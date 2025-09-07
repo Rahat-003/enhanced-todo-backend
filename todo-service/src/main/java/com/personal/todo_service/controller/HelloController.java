@@ -1,4 +1,4 @@
-package com.personal.gateway.controller;
+package com.personal.todo_service.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/todo-service")
+@RequestMapping("/api/todos")
 public class HelloController {
 
     @GetMapping("/hello")
