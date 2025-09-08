@@ -1,6 +1,7 @@
 package com.personal.auth_service.util;
 
 import com.personal.auth_service.config.JwtProperties;
+import com.personal.auth_service.service.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,12 +24,13 @@ public class JwtUtil {
     private final PrivateKey privateKey;
     private final PublicKey publicKey;
 
-    public String generateAccessToken(UserDetails userDetails) {
-        final String authorities = userDetails.getAuthorities().stream()
+    public String generateAccessToken(CustomUserDetails userDetails) {
+        String authorities = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
+
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(String.valueOf(userDetails.getAppUser().getId())) // <-- ID as sub
                 .claim("roles", authorities)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
@@ -36,16 +38,20 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String generateRefreshToken(String username) {
+
+    public String generateRefreshToken(String userId, String deviceId, String sessionId) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(userId)
+                .claim("deviceId", deviceId)
+                .claim("sessionId", sessionId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getRefreshTokenExpiration()))
                 .signWith(SignatureAlgorithm.RS256, privateKey)
                 .compact();
     }
 
-    public String extractUsername(String token) {
+
+    public String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -54,23 +60,19 @@ public class JwtUtil {
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+        return claimsResolver.apply(extractAllClaims(token));
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(publicKey)
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public Boolean isTokenValid(String token, CustomUserDetails userDetails) {
+        final String userId = extractUserId(token);
+        return userId.equals(String.valueOf(userDetails.getAppUser().getId())) && !isTokenExpired(token);
     }
 }

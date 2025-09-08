@@ -1,4 +1,3 @@
-
 package com.personal.auth_service.service;
 
 import com.personal.domain.AppUser;
@@ -44,5 +43,9 @@ public record CustomUserDetails(AppUser appUser) implements UserDetails {
     @Override
     public boolean isEnabled() {
         return appUser.isEnabled();
+    }
+
+    public AppUser getAppUser() {
+        return appUser;
     }
 }
