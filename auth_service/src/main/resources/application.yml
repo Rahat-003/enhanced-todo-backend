@@ -8,10 +8,10 @@ spring:
       - "optional:configserver:http://localhost:15001/"
       - "optional:classpath:oAuth2_google-secret.yml"
 
-jwt:
-  keystore:
-    path: classpath:keys/myKey.jks
-    password: rahat1722
-    key-alias: rahat
-  expiration: 86400000 # 24 hours
-  refreshTokenExpiration: 604800000 # 7 days
+#jwt:
+#  keystore:
+#    path: classpath:keys/myKey.jks
+#    password: rahat1722
+#    key-alias: rahat
+#  expiration: 86400000 # 24 hours
+#  refreshTokenExpiration: 604800000 # 7 days
