@@ -33,7 +33,7 @@ public class AuthService {
 
         AppUser user = AppUser.builder()
                 .email(request.getEmail())
-                .userName(request.getUserName())
+                .userName(request.getUserName()) // can still store for display
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ROLE_USER)
                 .enabled(true)
@@ -41,36 +41,39 @@ public class AuthService {
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
+
         userRepository.save(user);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+        CustomUserDetails userDetails = new CustomUserDetails(user);
         String accessToken = jwtUtil.generateAccessToken(userDetails);
-        String refreshToken = jwtUtil.generateRefreshToken(request.getEmail());
 
-        saveRefreshToken(user, refreshToken);
+//        String refreshToken = jwtUtil.generateRefreshToken(user.getEmail());
+//        saveRefreshToken(user, refreshToken);
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+//                .refreshToken(refreshToken)
                 .build();
     }
 
     public AuthResponse login(AuthRequest request) {
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+        CustomUserDetails userDetails = new CustomUserDetails(
+                userRepository.findByEmail(request.getEmail())
+                        .orElseThrow(() -> new BadCredentialsException("Invalid credentials"))
+        );
+
         if (!passwordEncoder.matches(request.getPassword(), userDetails.getPassword())) {
             throw new BadCredentialsException("Invalid credentials");
         }
 
-        final AppUser user = userRepository.findByEmail(request.getEmail()).get();
-
         String accessToken = jwtUtil.generateAccessToken(userDetails);
-        String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
+//        String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
 
-        saveRefreshToken(user, refreshToken);
+//        saveRefreshToken(userDetails.getAppUser(), refreshToken);
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+//                .refreshToken(refreshToken)
                 .build();
     }
 
