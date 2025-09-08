@@ -6,7 +6,7 @@ spring:
   config:
     import:
       - "optional:configserver:http://localhost:15001/"
-      - "optional:classpath:oAuth2_google-secret.yml"
+#      - "optional:classpath:oAuth2_google-secret.yml"
 
 #jwt:
 #  keystore:
