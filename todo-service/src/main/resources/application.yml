@@ -4,4 +4,6 @@ spring:
   profiles:
     active: dev
   config:
-    import: "optional:configserver:http://localhost:15001/"
+    import:
+      - "optional:configserver:http://localhost:15001/"
+#      - "optional:classpath:oAuth2_google-secret.yml"
