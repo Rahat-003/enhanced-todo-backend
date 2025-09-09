@@ -20,12 +20,18 @@ public class JwtTokenUtil {
     private final PublicKey publicKey;
 
     public JwtTokenUtil() throws Exception {
+        // Load PEM file from classpath: src/main/resources/keys/public_key.pem
         InputStream is = getClass().getClassLoader().getResourceAsStream("keys/public_key.pem");
-        if (is == null) throw new RuntimeException("public_key.pem not found in resources/keys");
+        if (is == null) {
+            throw new RuntimeException("public_key.pem not found in resources/keys");
+        }
         String pubKey = new String(is.readAllBytes(), StandardCharsets.UTF_8);
         this.publicKey = PemUtils.parseRSAPublicKeyFromPem(pubKey);
     }
 
+    /**
+     * Validate JWT signature & expiration.
+     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -39,6 +45,9 @@ public class JwtTokenUtil {
         }
     }
 
+    /**
+     * Extract all claims (body).
+     */
     public Claims getAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(publicKey)
@@ -47,19 +56,27 @@ public class JwtTokenUtil {
                 .getBody();
     }
 
+    /**
+     * Extract `sub` claim as UserId.
+     */
     public String getUserId(String token) {
-        return getAllClaims(token).getSubject(); // sub claim
+        return getAllClaims(token).getSubject();
     }
 
+    /**
+     * Extract authorities from JWT claim "roles".
+     */
     public Collection<? extends GrantedAuthority> getAuthorities(String token) {
         Claims claims = getAllClaims(token);
         Object rolesObj = claims.get("roles");
         List<GrantedAuthority> authorities = new ArrayList<>();
+
         if (rolesObj instanceof String roleStr) {
             authorities.add(new SimpleGrantedAuthority(roleStr));
         } else if (rolesObj instanceof List<?> roleList) {
             roleList.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.toString())));
         }
+
         return authorities;
     }
 }
