@@ -9,7 +9,7 @@
     <artifactId>todo-platform</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>Todo Platform</name>
+    <name>enhanced-todo-backend</name>
     <description>Multi-module Todo application platform</description>
 
     <parent>
