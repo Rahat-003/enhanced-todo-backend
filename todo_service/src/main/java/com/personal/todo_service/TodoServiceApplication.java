@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(basePackages = {"com.personal.domain"})
 @EnableJpaRepositories(basePackages = {"com.personal.repository"})
 @ComponentScan(basePackages = {
-        "com.personal.auth_service",
+        "com.personal.todo_service",
         "com.personal.repository",
         "com.personal.service"
 })
