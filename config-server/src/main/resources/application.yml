@@ -8,4 +8,4 @@ spring:
         git:
           uri: ${HOME}/enhanced-todo-app-config
           search-paths: "*server"
-          default-label: rahat-tmp
+          default-label: rahat_multi_module
